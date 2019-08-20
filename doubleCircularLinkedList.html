@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>双向循环链表 -- DoubleCircularLinkedList</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function DoubleCircularLinkedList() {
+        let Node = function(element) {
+          this.element = element;
+          this.next = null;
+          this.prev = null;
+        };
+        let length = 0;
+        let head = null;
+        let tail = null;
+
+        this.append = function(element) {
+          let node = new Node(element),
+            current;
+          if(head === null) {
+            head = node;
+            tail = node;
+            head.prev = tail;
+            tail.next = head;
+          } else {
+            tail.next = node;
+            node.prev = tail;
+            tail = node;
+            head.prev = tail;
+            tail.next = head;
+          }
+          length++;
+        }
+
+        this.insert = function(position, element) {
+          if(position >= 0 && position <= length) {
+            let node = new Node(element),
+              current = head,
+              previous,
+              index = 0;
+
+            if(position === 0) {
+              if(!head) {
+                head = node;
+                tail = node;
+                head.prev = tail;
+                tail.next = head;
+              } else {
+                node.next = current;
+                current.prev = node;
+                head = node;
+                head.prev = tail;
+                tail.next = head;
+              }
+            } else if(position === length) {
+              current = tail;
+              current.next = node;
+              node.prev = current;
+              tail = node;
+              head.prev = tail;
+              tail.next = head;
+            } else {
+              while(index++ < position) {
+                previous = current;
+                current = current.next;
+              }
+              previous.next = node;
+              node.next = current;
+
+              current.prev = node;
+              node.prev = previous;
+            }
+
+            length++;
+
+            return true;
+          } else {
+            return false;
+          }
+        };
+
+        this.removeAt = function(position) {
+          if(position > -1 && position < length) {
+            let current = head,
+              previous,
+              index = 0;
+
+            if(position === 0) {
+              head = current.next;
+
+              if(length === 1) {
+                tail = null;
+              } else {
+                head.prev = tail;
+                tail.next = head;
+              }
+            } else if(position === length - 1) {
+              current = tail;
+              tail = current.prev;
+              tail.next = head;
+              head.prev = tail;
+            } else {
+              while(index++ < position) {
+                previous = current;
+                current = current.next;
+              }
+              previous.next = current.next;
+              current.next.prev = previous;
+            }
+
+            length--;
+
+            return current.element;
+          } else {
+            return null;
+          }
+        };
+
+        this.toString = function() {
+          let current = head,
+            string = '';
+
+          while(length--) {
+            string += current.element + (current.next ? ',' : '');
+            current = current.next;
+          }
+
+          return string;
+        };
+
+        this.indexOf = function(element) {
+          let current = head,
+            index = 0;
+
+          while(current) {
+            if(element === current.element) {
+              return index;
+            }
+            index++;
+            current = current.next;
+          }
+
+          return -1;
+        };
+
+        this.remove = function(element) {
+          let index = this.indexOf(element);
+          this.removeAt(index);
+        };
+
+        this.isEmpty = function() {
+          return length === 0;
+        };
+
+        this.size = function() {
+          return length;
+        }
+
+        this.getHead = function() {
+          return head;
+        };
+
+        this.getTail = function() {
+          return tail;
+        }
+      }
+
+      let doubleCircularLinkedList = new DoubleCircularLinkedList();
+      console.log('doubleCircularLinkedList.isEmpty()', doubleCircularLinkedList.isEmpty());
+      doubleCircularLinkedList.append('xh');
+      doubleCircularLinkedList.append('lt');
+      console.log('doubleCircularLinkedList.isEmpty()', doubleCircularLinkedList.isEmpty());
+      console.log('doubleCircularLinkedList.getHead()', doubleCircularLinkedList.getHead());
+      console.log('doubleCircularLinkedList.getTail()', doubleCircularLinkedList.getTail());
+      doubleCircularLinkedList.insert(0, 'lt0');
+      doubleCircularLinkedList.insert(1, 'lt1');
+      doubleCircularLinkedList.removeAt(0);
+      doubleCircularLinkedList.remove('lt1');
+      console.log('doubleCircularLinkedList.isEmpty()', doubleCircularLinkedList.isEmpty());
+      console.log('doubleCircularLinkedList.size()', doubleCircularLinkedList.size());
+      console.log('doubleCircularLinkedList.toString()', doubleCircularLinkedList.toString());
+    </script>
+  </body>
+</html>

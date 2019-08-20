@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>链表 -- LinkedList</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function LinkedList() {
+        let Node = function(element) {
+          this.element = element;
+          this.next = null;
+        }
+
+        let length = 0;
+        let head = null;
+
+        this.append = function(element) {
+          let node = new Node(element),
+            current;
+
+          if(head === null) {
+            head = node;
+          } else {
+            current = head;
+
+            // 循环列表，直到找到最后一项
+            while(current.next) {
+              // 当 current.next 为 null 时，current 就是最后一项
+              current = current.next;
+            }
+
+            // 找到最后一项，将其 next 赋为 node, 建立连接
+            current.next = node;
+          }
+
+          length++; // 更新列表长度
+        };
+
+        this.removeAt = function(position) {
+          // 检查越界值
+          if(position > -1 && position < length) {
+            let current = head,
+              previous,
+              index = 0;
+
+            if(position === 0) {
+              head = current.next;
+            } else {
+              while(index++ < position) {
+                // 移除元素时，要让删除的指针的前一个指针指向删除的指针的后一个指针
+                previous = current;  // 前一个指针
+                current = current.next; // 后一个指针
+                // console.log('previous.element', previous);
+                // console.log('current.element', current);
+              }
+
+              // 将 privious 与 current 的下一项链接起来：跳过 current，从而移除它
+              previous.next = current.next; // 让前一个指针指向后一个指针
+            }
+
+            length--;
+
+            return current.element;  // 返回删除的指针
+          } else {
+            return null;
+          }
+        };
+
+        this.insert = function(position, element) {
+          if(position >= 0 && position <= length) {
+            let node = new Node(element),
+              current = head,
+              previous,
+              index = 0;
+
+            if(position === 0) {
+              node.next = current;
+              head = node;
+            } else {
+              while(index++ < position) {
+                previous = current;
+                current = current.next;
+              }
+
+              node.next = current;
+              previous.next = node;
+
+            }
+
+            length++;
+
+            return true;
+          } else {
+            return false;
+          }
+        };
+
+        this.toString = function() {
+          let current = head,
+          string = '';
+
+          while(current) {
+            string += current.element + (current.next ? ',' : '');
+            current = current.next;
+          }
+
+          return string;
+        };
+
+        this.indexOf = function(element) {
+          let current = head,
+            index = 0;
+
+          while(current) {
+            if(element === current.element) {
+              console.log('element', element);
+              return index;
+            }
+            index++;
+            current = current.next;
+          }
+
+          return -1;
+        };
+
+        this.remove = function(element) {
+          let index = this.indexOf(element);
+          console.log('remove index', index);
+          return this.removeAt(index);
+        };
+
+        this.isEmpty = function() {
+          return length === 0;
+        };
+
+        this.size = function() {
+          return length;
+        };
+
+        this.getHead = function() {
+          return head;
+        };
+      }
+
+      let list = new LinkedList();
+      list.append(15);
+      list.append(10);
+      list.append(1);
+      list.append(2);
+      list.append(3);
+      list.removeAt(0);
+      list.insert(1, 0);
+      list.remove(1);
+      console.log('list.isEmpty()', list.isEmpty());
+      console.log('list.size()', list.size());
+      console.log('list.getHead()', list.getHead());
+      console.log(list.toString());
+
+    </script>
+  </body>
+</html>

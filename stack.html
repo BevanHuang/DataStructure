@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>栈-Stack</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // function Stack() {
+      //   let items = [];
+      //   this.push = function(element) {
+      //     items.push(element);
+      //   };
+      //   this.pop = function() {
+      //     items.pop();
+      //   };
+      //   this.peek = function() {
+      //     return items[items.length - 1];
+      //   };
+      //   this.isEmpty = function() {
+      //     return items.length == 0;
+      //   };
+      //   this.size = function() {
+      //     return items.length;
+      //   };
+      //   this.clear = function() {
+      //     items = [];
+      //   };
+      //   this.print = function() {
+      //     console.log(items.toString());
+      //   };
+      // }
+      // let stack = new Stack();
+      // console.log(stack.isEmpty());
+      // stack.push(5);
+      // stack.push(8);
+      // console.log(stack.peek());
+      // stack.push(11);
+      // console.log('size:', stack.size());
+      // console.log(stack.isEmpty());
+      // stack.push(15);
+      // stack.pop();
+      // stack.pop();
+      // console.log(stack.size());
+      // stack.print();
+      // use Symbol
+      // let _items = Symbol();
+      // class Stack {
+      //   constructor() {
+      //     this[_items] = [];
+      //   }
+      //   push(element) {
+      //     this[_items].push(element);
+      //   }
+      //   pop() {
+      //     this[_items].pop();
+      //   }
+      //   peek() {
+      //     return this[_items][this[_items].length - 1];
+      //   }
+      //   isEmpty() {
+      //     return this[_items].length == 0;
+      //   }
+      //   size() {
+      //     return this[_items].length;
+      //   }
+      //   clear() {
+      //     this[_items] = [];
+      //   }
+      //   print() {
+      //     console.log(this[_items].toString());
+      //   }
+      // }
+
+      // use WeakMap
+      let Stack = (function() {
+        const items = new WeakMap();
+        class Stack {
+          constructor() {
+            items.set(this, []);
+          }
+          push(element) {
+            let s = items.get(this);
+            s.push(element);
+          }
+          pop() {
+            let s = items.get(this);
+            let r = s.pop();
+            return r;
+          }
+          peek() {
+            let s = items.get(this);
+            return s[s.length - 1];
+          }
+          isEmpty() {
+            let s = items.get(this);
+            return s.length == 0;
+          }
+          size() {
+            let s = items.get(this);
+            return s.length;
+          }
+          clear() {
+            items.set(this, []);
+          }
+          print() {
+            let s = items.get(this);
+            console.log(s.toString());
+          }
+        }
+        return Stack;
+      })();
+      let stack = new Stack();
+      console.log('stack.isEmpty()', stack.isEmpty());
+      stack.push(5);
+      stack.push(8);
+      // let objectSymbols = Object.getOwnPropertySymbols(stack);
+      // console.log('objectSymbols.length', objectSymbols.length);
+      // console.log('objectSymbols', objectSymbols);
+      // console.log('objectSymbols[0]', objectSymbols[0]);
+      // stack[objectSymbols[0]].push(1);
+      console.log('stack.peek()', stack.peek());
+      stack.push(11);
+      console.log('size:', stack.size());
+      console.log('stack.isEmpty()', stack.isEmpty());
+      stack.push(15);
+      stack.pop();
+      stack.pop();
+      console.log('stack.size()', stack.size());
+      stack.print();
+
+
+      // 从十进制到二进制
+      function divideBy2(decNumber) {
+        var remStack = new Stack(),
+          rem,
+          binaryString = '';
+        while(decNumber > 0) {
+          rem = Math.floor(decNumber % 2);
+          remStack.push(rem);
+          decNumber = Math.floor(decNumber / 2);
+        }
+
+        while(!remStack.isEmpty()) {
+          binaryString += remStack.pop().toString();
+        }
+
+        return binaryString;
+      }
+
+      console.log('divideBy2(233)', divideBy2(233));
+      console.log('divideBy2(10)', divideBy2(10));
+      console.log('divideBy2(1000)', divideBy2(1000));
+
+      // 从十进制到任意进制
+      function baseConverter(decNumber, base) {
+        var remStack = new Stack(),
+          rem,
+          baseString = '',
+          digits = '0123456789ABCDEF';
+        while(decNumber > 0) {
+          rem = Math.floor(decNumber % base);
+          remStack.push(rem);
+          decNumber = Math.floor(decNumber / base);
+        }
+
+        while(!remStack.isEmpty()) {
+          baseString += digits[remStack.pop()];
+        }
+
+        return baseString;
+      }
+
+      console.log('100345转换成2进制', baseConverter(100345, 2));
+      console.log('100345转换成8进制', baseConverter(100345, 8));
+      console.log('100345转换成16进制', baseConverter(100345, 16));
+    </script>
+  </body>
+</html>
